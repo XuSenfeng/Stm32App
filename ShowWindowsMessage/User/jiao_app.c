@@ -129,6 +129,7 @@ void deal_data(char *datas){
 		}
 			sprintf(Wifi_str,"%skb/s",Wifi_str);		
 	}
+	data_string[99]=0, temp_str[99]=0, time_str[99]=0, CPU_str[99]=0, Wifi_str[99]=0;
 }
 //初始的时候显示的一些信息
 void LCD_Show_Init(void)
@@ -155,11 +156,12 @@ void LCD_Show_Init(void)
 	LCD_SetFont(&Font8x16);
 	LCD_SetTextColor(GREEN);
 }
+char datas[100] = {0};
+
 //实际循环显示的内容
 void LCD_Test(void)
 {
 	int i;
-	char datas[55] = {0};
 	LCD_SetTextColor(GREEN);
 	//向电脑发送数据从而获取信息
 	while(!(FIFO8_Status(&app_fifo))){
@@ -207,7 +209,7 @@ void LCD_Test(void)
 	//显示的文字进行一次循环
 	if(str_num==MAX_STR_SHOW)
 		str_num=0;
-    HAL_Delay(500);
+    HAL_Delay(700);
 
 }
 
