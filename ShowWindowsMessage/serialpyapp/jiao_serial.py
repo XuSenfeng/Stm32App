@@ -21,7 +21,7 @@ def port_open_recv():#对串口的参数进行配置
 #isOpen()函数来查看串口的开闭状态
 
 
-i=0
+
 # 关闭使用的端口
 def port_close():
     ser.close()
@@ -45,7 +45,9 @@ def get():
     else:
         return None
 
-if __name__ == '__main__':
+times=0
+def serial_main():
+    global times
     port_open_recv()
     data = jiao_getWeather.get_serial_data()
     while True:
@@ -54,13 +56,21 @@ if __name__ == '__main__':
             # 进行数据类型的准备
             a = data + datetime.datetime.now().strftime('h%H%M%S') + 'C' + jiao_getCpu.get_cpu_data() + '|' + 'W' + jiao_getWifi.getNet()
             send(a)
-            i+=1
+            times+=1
             if(1%1000 == 0):
-                i=0
+                times=0
                 # 更新天气数据
                 data = jiao_getWeather.get_serial_data()
 
         else:
             sleep(0.1)
+
+
+if __name__ == '__main__':
+    while 1:
+        try:
+            serial_main()
+        except:
+            sleep(1)
 
 

@@ -54,7 +54,7 @@ void MX_USART1_UART_Init(void)
   HAL_NVIC_SetPriority(USART1_IRQn ,0,1);	//抢占优先级0，子优先级1
   HAL_NVIC_EnableIRQ(USART1_IRQn );		    //使能USART1中断通道 
  /*使能串口接收断 */
-  __HAL_UART_ENABLE_IT(&huart1,UART_IT_RXNE);    
+
   /* USER CODE END USART1_Init 2 */
 
 }

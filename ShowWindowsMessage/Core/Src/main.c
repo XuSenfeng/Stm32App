@@ -90,16 +90,17 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_FSMC_Init();
-  MX_USART1_UART_Init();
+
   //SPI_FLASH_Init();
   /* USER CODE BEGIN 2 */
   ILI9341_Init();
   LCD_Show_Init();
 	
   /* USER CODE END 2 */
-
+  MX_USART1_UART_Init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  __HAL_UART_ENABLE_IT(&huart1,UART_IT_RXNE);    
   while (1)
   {
     /* USER CODE END WHILE */

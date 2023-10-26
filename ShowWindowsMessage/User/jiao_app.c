@@ -22,11 +22,12 @@ void jiao_App_Init(){
 
 
 //对收取到的信息进行处理
-void deal_data(char *datas){
-	int i=0, j, tempture=0;
+int deal_data(char *datas){
+	int i=0, j, tempture=0, status = 0;
 	char temp_ch;
 	temp_out = ETMP_OUT;
 	if(datas[i] == 'd'){
+		status++;
 		//传入日期
 		i++;
 		sprintf(data_string,"日期: ");
@@ -52,6 +53,7 @@ void deal_data(char *datas){
 		}			
 	}
 	if(datas[i] == 't'){
+		status++;
 		//最高温度
 		i++;
 		sprintf(temp_str,"当前温度T: ");
@@ -70,7 +72,7 @@ void deal_data(char *datas){
 			i++;
 		}
 		if(!temp_out){
-			return;
+			return 1;
 		}
 		i++;
 		if(tempture < 16)
@@ -81,6 +83,7 @@ void deal_data(char *datas){
 			sprintf(temp_str,"%s%s",temp_str, " 玩得开心");			
 	}
 	if(datas[i] == 'h'){
+		status++;
 		i++;
 		sprintf(time_str,"时间  ");
 		temp_ch = datas[i++];
@@ -100,7 +103,7 @@ void deal_data(char *datas){
 	}
 	
 	if(datas[i++] == 'C'){
-
+		status++;
 		sprintf(CPU_str,"CPU = ");
 		while(datas[i] != '|'){
 			sprintf(CPU_str,"%s%c",CPU_str, datas[i]);
@@ -115,7 +118,7 @@ void deal_data(char *datas){
 	}
 	i++;
 	if(datas[i++] == 'W'){
-
+		status++;
 		sprintf(Wifi_str,"Wifi 上行= ");
 		while(datas[i] != '|'){
 			sprintf(Wifi_str,"%s%c",Wifi_str, datas[i]);
@@ -130,6 +133,26 @@ void deal_data(char *datas){
 			sprintf(Wifi_str,"%skb/s",Wifi_str);		
 	}
 	data_string[99]=0, temp_str[99]=0, time_str[99]=0, CPU_str[99]=0, Wifi_str[99]=0;
+	//字符串显示出现问题
+	if(status < 5)
+	{
+		while(FIFO8_Status(&app_fifo))
+		{
+			FIFO8_Get(&app_fifo);
+		}
+		for(i=0;i<100;i++)
+		{
+			datas[i]=0;
+			data_string[i] = 0;
+			temp_str[i] = 0;
+			time_str[i] = 0;
+			CPU_str[i] = 0;
+			Wifi_str[i] = 0;
+		}
+
+		return 1;
+	}
+	return 0;
 }
 //初始的时候显示的一些信息
 void LCD_Show_Init(void)
@@ -163,6 +186,11 @@ void LCD_Test(void)
 {
 	int i;
 	LCD_SetTextColor(GREEN);
+	//清除之前的数据
+	while(FIFO8_Status(&app_fifo))
+	{
+		FIFO8_Get(&app_fifo);
+	}
 	//向电脑发送数据从而获取信息
 	while(!(FIFO8_Status(&app_fifo))){
 			printf("1");
@@ -176,23 +204,23 @@ void LCD_Test(void)
 		i++;
 	}
 	//获取串口的数据
-	deal_data(datas);
-	//显示当前的日期
-    LCD_ClearLine(LINE(5));
-	ILI9341_DispStringLine_EN_CH(LINE(5),data_string);
-	//显示当前的天气
-    LCD_ClearLine(LINE(7));
-	ILI9341_DispStringLine_EN_CH(LINE(7),temp_str);
-	//显示当前时间
-    LCD_ClearLine(LINE(9));	
-	ILI9341_DispStringLine_EN_CH(LINE(9),time_str);
-	//显示CPU状态
-    LCD_ClearLine(LINE(11));
-	ILI9341_DispStringLine_EN_CH(LINE(11),CPU_str); 
-	//显示网络速率
-    LCD_ClearLine(LINE(13));
-	ILI9341_DispStringLine_EN_CH(LINE(13),Wifi_str); 
-
+	if(!(deal_data(datas))){
+		//显示当前的日期
+		LCD_ClearLine(LINE(5));
+		ILI9341_DispStringLine_EN_CH(LINE(5),data_string);
+		//显示当前的天气
+		LCD_ClearLine(LINE(7));
+		ILI9341_DispStringLine_EN_CH(LINE(7),temp_str);
+		//显示当前时间
+		LCD_ClearLine(LINE(9));	
+		ILI9341_DispStringLine_EN_CH(LINE(9),time_str);
+		//显示CPU状态
+		LCD_ClearLine(LINE(11));
+		ILI9341_DispStringLine_EN_CH(LINE(11),CPU_str); 
+		//显示网络速率
+		LCD_ClearLine(LINE(13));
+		ILI9341_DispStringLine_EN_CH(LINE(13),Wifi_str); 
+	}
 	//一段时间以后会进行更改对下方显示的文字
 	str_time++;
 	if(str_time == SHOW_STR_TIME){
@@ -209,7 +237,9 @@ void LCD_Test(void)
 	//显示的文字进行一次循环
 	if(str_num==MAX_STR_SHOW)
 		str_num=0;
+	
     HAL_Delay(700);
+
 
 }
 

@@ -19,20 +19,7 @@ params = {
 url = "https://api.seniverse.com/v3/weather/now.json"
 
 # 获取数据
-r = requests.get(url, params=params)
 
-# 解析数据
-data = r.json()["results"]
-
-address = data[0]["location"]['path']        # 地点
-temperature = data[0]['now']["temperature"]  # 温度
-text = data[0]['now']["text"]			     # 天气情况
-
-# 弹窗显示消息
-message = address + " 当前天气：\n" + \
-          "温度：" + temperature + "℃" + \
-          "\n天气情况：" + text + \
-          "\n祝您心情愉悦！(^o^)"
           
 """
 标题为“当前天气”
@@ -44,8 +31,24 @@ notification.notify(title="当前天气",
                     timeout=10)
 """
 
-text2 = str(text.encode('gbk'))
-def get_serial_data():
+
+def get_serial_data_0():
+    r = requests.get(url, params=params)
+
+    # 解析数据
+    data = r.json()["results"]
+
+    address = data[0]["location"]['path']        # 地点
+    temperature = data[0]['now']["temperature"]  # 温度
+    text = data[0]['now']["text"]			     # 天气情况
+
+    """ 弹窗显示消息
+    message = address + " 当前天气：\n" + \
+            "温度：" + temperature + "℃" + \
+            "\n天气情况：" + text + \
+            "\n祝您心情愉悦！(^o^)"
+    """
+
     # 获取日期
     result_data = 'd' + date_Y + date_m + date_d
     # 获取温度
@@ -54,11 +57,15 @@ def get_serial_data():
     # print(result_data)
     # print(message)
     return result_data
-def get_serial_data2():
-    return text2
+
+def get_serial_data():
+    try:
+        return get_serial_data_0()
+    except:
+        return "d20231022t14t7t"
+
 # d20231022t14t7t
 
 
 if __name__ == '__main__':
-   # get_serial_data()
-   print(text2)
+    print("hello")
