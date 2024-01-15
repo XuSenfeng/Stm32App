@@ -15,3 +15,5 @@
 我主要实现的就是AT命令的处理, 还没有进行加密之类的网络操作的测试(我还没学过)
 
 目前收发程序跑了两天没有出现崩溃的情况
+
+要连接的Wifi密码在E:\JHY\stm32\github\Stm32App\MQTT-Template\mqtt\platform\FreeRTOS\platform_net_socket.c文件里面
