@@ -1,4 +1,5 @@
 #include "jiao_app.h"
+#include <stdlib.h>
 struct FIFO8 app_fifo;
 unsigned char app_fifo_buf[100];
 //外部的句子
@@ -18,6 +19,7 @@ extern uint16_t lcdid;
 void jiao_App_Init(){
 	//初始化一个信息传递的FIFO
 	FIFO8_Init(&app_fifo, 100, app_fifo_buf);
+    str_num = (rand()%50);
 }
 
 
