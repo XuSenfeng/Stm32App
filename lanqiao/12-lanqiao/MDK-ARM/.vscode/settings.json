@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "key.h": "c",
+        "menu.h": "c",
+        "ring.h": "c",
+        "myuart.h": "c"
+    }
+}

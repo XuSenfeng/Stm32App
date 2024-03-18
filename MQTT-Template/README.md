@@ -4,7 +4,7 @@
 
 移植大佬的MQTT框架, 这个是代码网址, 学的是韦东山100ask的课程
 
-[mqttclient](https://github.com/jiejieTop/mqttclient)
+实际移植的项目: [mqttclient](https://github.com/jiejieTop/mqttclient)
 
 主要实现的是使用开发板上面的ESP8266连接MQTT服务器, 目前使用的是ip地址进行连接(FreeRTOS版本)
 
@@ -17,3 +17,20 @@
 目前收发程序跑了两天没有出现崩溃的情况
 
 要连接的Wifi密码在E:\JHY\stm32\github\Stm32App\MQTT-Template\mqtt\platform\FreeRTOS\platform_net_socket.c文件里面
+
+## 主要的实现
+
+通过USART3与Esp8288模块通信, 分析数据给移植的MQTT框架使用
+
+数据的保存使用的是环形缓冲区
+
+### ATRetParser任务
+
+一个解析的任务, 会解析Esp8266接收的信息, 然后发送给MQTT的框架, 会在每一个换行符以后对特殊的信息进行解析
+
+获取信息是通过USART3, 平时会在阻塞等待一个二值信号量, 一旦获取到就会进行分析
+
+### Task_AClient_Test任务
+
+创建mqtt连接以及订阅主题
+

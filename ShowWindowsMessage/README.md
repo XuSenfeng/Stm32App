@@ -1,5 +1,7 @@
 # ShowWindowsMessage
 
+![QQ图片20240125175403](https://picture-01-1316374204.cos.ap-beijing.myqcloud.com/image/202401251754576.jpg)
+
 通过与Windows连接获取一些实时的信息显示在屏幕上面
 
 基于野火开发板, 使用需要Flash里面保存的字模

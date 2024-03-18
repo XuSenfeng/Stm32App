@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "key.h": "c",
+        "menu.h": "c",
+        "lcd.h": "c",
+        "i2c_hal.h": "c",
+        "eeprom.h": "c"
+    }
+}
